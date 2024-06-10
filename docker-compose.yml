@@ -1,0 +1,43 @@
+version: '3'
+services:
+    java_app:
+        container_name: java_app
+        image: java-app:1.0.0
+        build:
+            context: ./demo
+        ports:
+            - "8080:8080"
+        environment:
+            - DATABASE_URL=jdbc:postgresql://java_db:5432/docker
+            - DATABASE_USERNAME=docker
+            - DATABASE_PASSWORD=docker
+        depends_on:
+            - java_db
+    java_db:
+        container_name: java_db
+        image: postgres:12
+        ports:
+        - 5432:5432
+        environment:
+            - POSTGRES_PASSWORD=docker
+            - POSTGRES_USER=docker
+            - POSTGRES_DB=docker
+    frontend:
+        image: demo-ui
+        container_name: demo-ui
+        build:
+            context: ./my-demo-ui
+        ports:
+            - "4200:80"
+        depends_on:
+            - java_app
+    # nginx:
+    #     image: nginx:latest
+    #     container_name: nginx
+    #     ports:
+    #         - "8088:80"
+    #     volumes:
+    #         - ./my-demo-ui/nginx.conf:/etc/nginx/conf.d/default.conf
+    #     depends_on:
+    #         - java_app
+    #         - frontend

@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  my-demo-ui-app:
+    container_name: my-demo-ui-container2
+    build: .
+    image: my-demo-ui:v1
+    ports:
+      - 80:80
+    networks:
+      - internalnet
+
+networks:
+  internalnet:
+    driver: bridge
